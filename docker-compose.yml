@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    restart: on-failure
+    env_file: db.env
+    networks:
+      - back-tier
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+
+  server:
+    build: ./server
+    restart: on-failure
+    env_file: server.env
+    networks:
+      - dashboard-tier
+      - back-tier
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+
+  dashboard:
+    build: ./dashboard
+    restart: on-failure
+    env_file: dashboard.env
+    networks:
+      - dashboard-tier
+    ports:
+      - "80:80"
+
+networks:
+  dashboard-tier:
+  back-tier:
+
+volumes:
+  db-data:
