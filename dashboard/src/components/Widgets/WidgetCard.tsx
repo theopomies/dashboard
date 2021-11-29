@@ -22,12 +22,13 @@ export function WidgetCard({
       <Button
         position="absolute"
         bg="transparent"
-        _hover={{ bg: "transparent" }}
-        top="0"
-        right="0"
+        _hover={{ bg: "transparent", color: "brand.darkGray" }}
+        top=".3rem"
+        right=".6rem"
+        color="brand.gray"
         onClick={closeHandler}
       >
-        <CloseIcon h=".6rem" />
+        <CloseIcon />
       </Button>
       {children}
     </GridItem>

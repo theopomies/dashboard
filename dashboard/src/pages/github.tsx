@@ -5,7 +5,7 @@ import { GithubProjectCard } from "../components/Widgets/GithubProjectCard";
 import { WidgetCard } from "../components/Widgets/WidgetCard";
 
 export default function Github() {
-  const [actives, setActives] = useState({ 1: true, 2: true });
+  const [actives, setActives] = useState({ 1: true, 2: true, 3: true });
 
   const removeX = (x: number) => () =>
     setActives((actives) => ({ ...actives, [x]: false }));
@@ -22,6 +22,11 @@ export default function Github() {
       )}
       {actives[2] && (
         <WidgetCard closeHandler={removeX(2)}>
+          <GithubProjectCard />
+        </WidgetCard>
+      )}
+      {actives[3] && (
+        <WidgetCard closeHandler={removeX(3)}>
           <GithubProjectCard />
         </WidgetCard>
       )}
