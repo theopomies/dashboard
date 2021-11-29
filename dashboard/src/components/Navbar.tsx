@@ -1,0 +1,56 @@
+import { Link, Text, VStack } from "@chakra-ui/layout";
+import { useRouter } from "next/dist/client/router";
+import { GithubIcon } from "./icons/GithubIcon";
+import { HomeiIcon } from "./icons/HomeIcon";
+import { SpotifyIcon } from "./icons/SpotifyIcon";
+import { TwitterIcon } from "./icons/TwitterIcon";
+import NextLink from "next/link";
+
+export function Navbar() {
+  const page = useRouter().route;
+
+  return (
+    <VStack height="100%" justify="center" align="center" spacing={10}>
+      <NextLink href="/">
+        <Link>
+          <HomeiIcon
+            h="2rem"
+            w="2rem"
+            fill={page == "/" ? "#1B1F23" : "brand.gray"}
+            _hover={{ fill: "#1B1F23" }}
+          />
+        </Link>
+      </NextLink>
+      <NextLink href="/spotify">
+        <Link>
+          <SpotifyIcon
+            h="2rem"
+            w="2rem"
+            fill={page == "/spotify" ? "#1ED760" : "brand.gray"}
+            _hover={{ fill: "#1ED760" }}
+          />
+        </Link>
+      </NextLink>
+      <NextLink href="/twitter">
+        <Link>
+          <TwitterIcon
+            h="2rem"
+            w="2rem"
+            fill={page == "/twitter" ? "#1da1f2" : "brand.gray"}
+            _hover={{ fill: "#1da1f2" }}
+          />
+        </Link>
+      </NextLink>
+      <NextLink href="/github">
+        <Link>
+          <GithubIcon
+            h="2rem"
+            w="2rem"
+            fill={page == "/github" ? "#1B1F23" : "brand.gray"}
+            _hover={{ fill: "#1B1F23" }}
+          />
+        </Link>
+      </NextLink>
+    </VStack>
+  );
+}

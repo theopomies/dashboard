@@ -18,7 +18,7 @@ export function DateDisplayer() {
 
   return (
     <HStack>
-      <HStack opacity="60%">
+      <HStack color="brand.gray">
         <CalendarIcon fontSize="1.5rem" />
         <Text fontWeight="500">Today</Text>
       </HStack>
@@ -36,7 +36,7 @@ export function DateDisplayer() {
       ) : null}
       <Menu>
         <MenuButton>
-          <ChevronDownIcon fontSize="1.5rem" opacity="60%" />
+          <ChevronDownIcon fontSize="1.5rem" color="brand.gray" />
         </MenuButton>
         <MenuList>
           <MenuItem onClick={() => setDisplay("none")}>None</MenuItem>
