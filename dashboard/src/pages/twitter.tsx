@@ -5,6 +5,7 @@ export default function Twitter() {
     <ServiceContainer
       title="Twitter"
       description="Your Twitter widgets in a single place"
+      isLogged={true}
     ></ServiceContainer>
   );
 }

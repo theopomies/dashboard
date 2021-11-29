@@ -5,6 +5,7 @@ export default function Spotify() {
     <ServiceContainer
       title="Spotify"
       description="Your Spotify widgets in a single place"
+      isLogged={true}
     ></ServiceContainer>
   );
 }
