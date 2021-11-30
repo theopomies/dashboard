@@ -9,7 +9,8 @@ export function Layout({ children }: { children: ReactNode }) {
     <main>
       <DarkModeSwitch />
       <Grid
-        minHeight="100vh"
+        h="100vh"
+        w="100%"
         bg="brand.lightGray"
         templateColumns="repeat(15, 1fr)"
         templateRows="repeat(20, 1fr)"
@@ -29,7 +30,7 @@ export function Layout({ children }: { children: ReactNode }) {
             <DateDisplayer />
           </Center>
         </GridItem>
-        <GridItem colSpan={14} rowSpan={17}>
+        <GridItem colSpan={14} rowSpan={14} h="100%" w="100%">
           {children}
         </GridItem>
       </Grid>

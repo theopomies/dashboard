@@ -9,6 +9,7 @@ export function WidgetCard({
 }: GridItemProps & { closeHandler: () => void }) {
   return (
     <GridItem
+      h="100%"
       bg="white"
       borderRadius=".3rem"
       shadow="sm"
