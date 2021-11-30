@@ -24,7 +24,7 @@ export default function Github() {
     >
       {actives[1] && (
         <WidgetCard closeHandler={removeX(1)} rowSpan={2} colSpan={2}>
-          <GithubCalendar />
+          <GithubCalendar username="theopomies" />
         </WidgetCard>
       )}
       {actives[2] && (

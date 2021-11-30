@@ -1,7 +1,7 @@
-import { Box, Flex, Heading, HStack, VStack } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/layout";
 import GitHubCalendar from "react-github-calendar";
 
-export function GithubCalendar() {
+export function GithubCalendar({ username }: { username: string }) {
   return (
     <Box
       padding="1rem"
@@ -9,7 +9,7 @@ export function GithubCalendar() {
       color="brand.darkGray"
       fontWeight="500"
     >
-      <GitHubCalendar username="theopomies" hideColorLegend fontSize={16} />
+      <GitHubCalendar username={username} hideColorLegend fontSize={16} />
     </Box>
   );
 }

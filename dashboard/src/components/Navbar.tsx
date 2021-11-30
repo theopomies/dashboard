@@ -36,8 +36,8 @@ export function Navbar() {
           <TwitterIcon
             h="2rem"
             w="2rem"
-            fill={page == "/twitter" ? "#1da1f2" : "brand.gray"}
-            _hover={{ fill: "#1da1f2" }}
+            fill={page == "/twitter" ? "brand.twitter" : "brand.gray"}
+            _hover={{ fill: "brand.twitter" }}
           />
         </Link>
       </NextLink>

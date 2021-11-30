@@ -21,6 +21,8 @@ const theme = extendTheme({
       lightBlue: "#39B4F3",
       blue: "#2012FE",
       darkblue: "#625ED7",
+      twitter: "#1da1f2",
+      error: "#ff5b5b",
     },
   },
   fonts,
