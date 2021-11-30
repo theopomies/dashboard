@@ -1,5 +1,6 @@
 import { CheckIcon } from "@chakra-ui/icons";
 import { Flex, Heading, HStack, VStack } from "@chakra-ui/layout";
+import { formatBigNumber } from "../../utils/formatBigNumber";
 
 export function GithubCommits() {
   return (
@@ -15,7 +16,7 @@ export function GithubCommits() {
         <CheckIcon fontSize="2rem" color="brand.darkGray" />
       </Flex>
       <VStack align="flex-start">
-        <Heading>100</Heading>
+        <Heading>{formatBigNumber(6666)}</Heading>
         <Heading size="sm" color="brand.gray" fontWeight="regular">
           <strong>Your</strong> commits to <strong>user/repo</strong>
         </Heading>

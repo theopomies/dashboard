@@ -1,24 +1,25 @@
-import { StarIcon } from "@chakra-ui/icons";
+import { GiFeather } from "react-icons/gi";
 import { Flex, Heading, HStack, VStack } from "@chakra-ui/layout";
 import { formatBigNumber } from "../../utils/formatBigNumber";
 
-export function GithubStars() {
+export function TwitterTweets() {
   return (
     <HStack h="100%" spacing={10}>
       <Flex
-        backgroundColor="brand.lightGray"
+        backgroundColor="brand.lightTwitter"
         h="4rem"
         w="4rem"
         justify="center"
         align="center"
         borderRadius="100%"
+        color="brand.twitter"
       >
-        <StarIcon fontSize="2rem" color="brand.darkGray" />
+        <GiFeather fontSize="2rem" />
       </Flex>
       <VStack align="flex-start">
-        <Heading>{formatBigNumber(49874)}</Heading>
+        <Heading>{formatBigNumber(4200, 1)}</Heading>
         <Heading size="sm" color="brand.gray" fontWeight="regular">
-          Stars on <strong>user/repo</strong>
+          <strong>Tweets</strong> posted
         </Heading>
       </VStack>
     </HStack>

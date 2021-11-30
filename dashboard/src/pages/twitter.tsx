@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { ServiceContainer } from "../components/ServiceContainer";
-import { GithubCalendar } from "../components/Widgets/GithubCalendar";
-import { GithubCommits } from "../components/Widgets/GithubCommits";
-import { GithubStars } from "../components/Widgets/GithubStars";
+import { TwitterFollowers } from "../components/Widgets/TwitterFollowers";
 import { TwitterPostTweet } from "../components/Widgets/TwitterPostTweet";
+import { TwitterTweets } from "../components/Widgets/TwitterTweets";
 import { WidgetCard } from "../components/Widgets/WidgetCard";
 
 export default function Twitter() {
@@ -27,12 +26,12 @@ export default function Twitter() {
       )}
       {actives[2] && (
         <WidgetCard closeHandler={removeX(2)} rowSpan={1}>
-          <GithubStars />
+          <TwitterFollowers />
         </WidgetCard>
       )}
       {actives[3] && (
         <WidgetCard closeHandler={removeX(3)} rowSpan={1}>
-          <GithubCommits />
+          <TwitterTweets />
         </WidgetCard>
       )}
     </ServiceContainer>

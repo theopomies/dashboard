@@ -30,6 +30,10 @@ export function TwitterPostTweet() {
         </Text>
         <Button
           bg="brand.twitter"
+          _hover={{
+            bg: "brand.twitter",
+            opacity: "80%",
+          }}
           color="white"
           borderRadius="5rem"
           disabled={!isValid(tweet)}

@@ -7,7 +7,6 @@ import { Navbar } from "./Navbar";
 export function Layout({ children }: { children: ReactNode }) {
   return (
     <main>
-      <DarkModeSwitch />
       <Grid
         h="100vh"
         w="100%"
