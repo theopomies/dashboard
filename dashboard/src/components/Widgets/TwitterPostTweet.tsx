@@ -9,7 +9,9 @@ export function TwitterPostTweet() {
   const [tweet, setTweet] = useState("");
   return (
     <VStack align="start" w="100%" h="100%" justify="strech" spacing={4}>
-      <Heading>Tweet</Heading>
+      <Heading marginLeft="1rem" size="lg">
+        Tweet
+      </Heading>
       <Textarea
         placeholder="What's happening?"
         w="100%"
