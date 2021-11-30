@@ -26,8 +26,8 @@ export function Navbar() {
           <SpotifyIcon
             h="2rem"
             w="2rem"
-            fill={page == "/spotify" ? "#1ED760" : "brand.gray"}
-            _hover={{ fill: "#1ED760" }}
+            fill={page == "/spotify" ? "brand.spotify" : "brand.gray"}
+            _hover={{ fill: "brand.spotify" }}
           />
         </Link>
       </NextLink>

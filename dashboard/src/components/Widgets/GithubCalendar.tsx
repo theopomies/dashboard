@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/layout";
 import GitHubCalendar from "react-github-calendar";
 
-export function GithubCalendar({ username }: { username: string }) {
+export function GithubCalendar() {
   return (
     <Box
       padding="1rem"
@@ -9,7 +9,7 @@ export function GithubCalendar({ username }: { username: string }) {
       color="brand.darkGray"
       fontWeight="500"
     >
-      <GitHubCalendar username={username} hideColorLegend fontSize={16} />
+      <GitHubCalendar username="theopomies" hideColorLegend fontSize={16} />
     </Box>
   );
 }

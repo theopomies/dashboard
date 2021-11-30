@@ -24,6 +24,7 @@ const theme = extendTheme({
       twitter: "#1da1f2",
       lightTwitter: "#1da0f21d",
       error: "#ff5b5b",
+      spotify: "#1ED760",
     },
   },
   fonts,
