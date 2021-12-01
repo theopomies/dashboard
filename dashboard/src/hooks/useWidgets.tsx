@@ -144,10 +144,8 @@ export function getAvailableWidgets(
   return (Object.entries(allWidgets) as [WidgetName, ServiceWidget][])
     .filter(
       ([name, { service: wService }]) =>
-        !widgets.some(
-          (widget) =>
-            widget.name == name && (service == undefined || service == wService)
-        )
+        !widgets.some((widget) => widget.name == name) &&
+        (service == undefined || service == wService)
     )
     .map(([name, { service }]) => ({
       name,
