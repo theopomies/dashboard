@@ -1,12 +1,14 @@
 import { Button } from "@chakra-ui/button";
 import { CloseIcon } from "@chakra-ui/icons";
 import { GridItem, GridItemProps } from "@chakra-ui/layout";
+import { removeWidget, useServices, WidgetName } from "../../hooks/useWidgets";
 
 export function WidgetCard({
-  closeHandler,
   children,
+  name,
   ...props
-}: GridItemProps & { closeHandler: () => void }) {
+}: GridItemProps & { name: WidgetName }) {
+  const services = useServices();
   return (
     <GridItem
       h="100%"
@@ -27,7 +29,7 @@ export function WidgetCard({
         top=".3rem"
         right=".6rem"
         color="brand.gray"
-        onClick={closeHandler}
+        onClick={() => removeWidget(services, name)}
       >
         <CloseIcon />
       </Button>

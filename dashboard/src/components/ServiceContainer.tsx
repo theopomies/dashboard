@@ -1,4 +1,11 @@
-import { Container, Flex, Grid, HStack, VStack } from "@chakra-ui/layout";
+import {
+  Container,
+  Divider,
+  Flex,
+  Grid,
+  HStack,
+  VStack,
+} from "@chakra-ui/layout";
 import { Heading, Button } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { WidgetButton } from "../components/WidgetButton";
@@ -11,6 +18,13 @@ import {
   PopoverCloseButton,
   PopoverBody,
 } from "@chakra-ui/popover";
+import {
+  addWidget,
+  displayNames,
+  Service,
+  useServices,
+  WidgetName,
+} from "../hooks/useWidgets";
 
 export function ServiceContainer({
   title,
@@ -22,11 +36,20 @@ export function ServiceContainer({
   title: string;
   description: string;
   children?: ReactNode;
-  availableWidgets?: ReactNode;
+  availableWidgets?: { name: WidgetName; service: Service }[];
   isLogged: boolean;
 }) {
+  const servicesContext = useServices();
+  availableWidgets.sort((a, b) =>
+    a.service > b.service ? 1 : a.service < b.service ? -1 : 0
+  );
+  const spotify = availableWidgets.filter((w) => w.service == "spotify");
+  const twitter = availableWidgets.filter((w) => w.service == "twitter");
+  const github = availableWidgets.filter((w) => w.service == "github");
+  const widgets = { spotify, twitter, github };
+
   return (
-    <Container maxW="140ch" padding="2rem" h="100%">
+    <Container maxW="140ch" padding="2rem" minH="100%">
       <VStack align="stretch" h="100%" spacing={14}>
         <HStack justify="space-between" align="end">
           <VStack align="flex-start">
@@ -48,7 +71,29 @@ export function ServiceContainer({
                 <PopoverHeader>
                   <Heading size="sm">Available Widgets</Heading>
                 </PopoverHeader>
-                <PopoverBody>{availableWidgets}</PopoverBody>
+                <PopoverBody>
+                  {Object.entries(widgets).map(([name, widgets]) => (
+                    <>
+                      {widgets.length > 0 && (
+                        <>
+                          <Heading size="xs">
+                            {name[0].toUpperCase() + name.slice(1)}
+                          </Heading>
+                          <Divider marginBottom="1rem" />
+                          {widgets.map(({ name }) => (
+                            <Button
+                              onClick={() => addWidget(servicesContext, name)}
+                              key={name}
+                              margin="0.5rem"
+                            >
+                              {displayNames[name]}
+                            </Button>
+                          ))}
+                        </>
+                      )}
+                    </>
+                  ))}
+                </PopoverBody>
               </PopoverContent>
             </Popover>
           )}
@@ -58,7 +103,7 @@ export function ServiceContainer({
           templateRows="repeat(4, 1fr)"
           gap={5}
           w="100%"
-          h="100%"
+          minH="100%"
         >
           {children}
         </Grid>
