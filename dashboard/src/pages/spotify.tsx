@@ -4,7 +4,7 @@ import { getAvailableWidgets, useWidgets } from "../hooks/useWidgets";
 export default function Spotify() {
   const widgets = useWidgets("spotify");
   const availableWidgets = getAvailableWidgets(widgets, "spotify");
-  
+
   return (
     <ServiceContainer
       title="Spotify"

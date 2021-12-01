@@ -7,7 +7,7 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <main>
       <Grid
-        minH="100vh"
+        h="100vh"
         w="100%"
         bg="brand.lightGray"
         templateColumns="repeat(15, 1fr)"
@@ -28,7 +28,7 @@ export function Layout({ children }: { children: ReactNode }) {
             <DateDisplayer />
           </Center>
         </GridItem>
-        <GridItem colSpan={14} rowSpan={14} minH="100%" w="100%">
+        <GridItem colSpan={14} rowSpan={16} h="100%" w="100%" overflow="scroll">
           {children}
         </GridItem>
       </Grid>

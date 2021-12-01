@@ -49,7 +49,7 @@ export function ServiceContainer({
   const widgets = { spotify, twitter, github };
 
   return (
-    <Container maxW="140ch" padding="2rem" minH="100%">
+    <Container maxW="140ch" padding="2rem" h="100%">
       <VStack align="stretch" h="100%" spacing={14}>
         <HStack justify="space-between" align="end">
           <VStack align="flex-start">
@@ -103,7 +103,7 @@ export function ServiceContainer({
           templateRows="repeat(4, 1fr)"
           gap={5}
           w="100%"
-          minH="100%"
+          h="100%"
         >
           {children}
         </Grid>

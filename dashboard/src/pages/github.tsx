@@ -4,7 +4,7 @@ import { getAvailableWidgets, useWidgets } from "../hooks/useWidgets";
 export default function Github() {
   const widgets = useWidgets("github");
   const availableWidgets = getAvailableWidgets(widgets, "github");
-  
+
   return (
     <ServiceContainer
       title="Github"
