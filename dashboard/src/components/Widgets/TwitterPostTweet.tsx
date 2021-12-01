@@ -9,7 +9,7 @@ export function TwitterPostTweet() {
   const isValid = (tweet: string) => tweet.length > 0 && tweet.length <= maxLen;
   const [tweet, setTweet] = useState("");
   return (
-    <WidgetCard rowSpan={2} colSpan={2} minHeight="14rem" name="postTweet">
+    <WidgetCard rowSpan={2} colSpan={2} name="postTweet">
       <VStack align="start" w="100%" h="100%" justify="strech" spacing={4}>
         <Heading marginLeft="1rem" size="lg">
           Tweet

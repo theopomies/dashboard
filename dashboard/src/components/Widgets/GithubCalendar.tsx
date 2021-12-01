@@ -4,7 +4,7 @@ import { WidgetCard } from "./WidgetCard";
 
 export function GithubCalendar() {
   return (
-    <WidgetCard rowSpan={2} colSpan={2} minHeight="14rem" name="calendar">
+    <WidgetCard rowSpan={2} colSpan={2} name="calendar">
       <Box
         padding="1rem"
         paddingTop="3rem"

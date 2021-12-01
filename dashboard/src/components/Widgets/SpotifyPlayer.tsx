@@ -26,7 +26,7 @@ export function SpotifyPlayer() {
   const [volume, setVolume] = useState(50);
 
   return (
-    <WidgetCard rowSpan={2} colSpan={2} minHeight="14rem" name="player">
+    <WidgetCard rowSpan={2} colSpan={2} name="player">
       <HStack h="100%" w="100%" justify="start" spacing={40}>
         <BiSquare size="10rem" />
         <HStack w="100%" justify="space-between">
