@@ -26,6 +26,8 @@ const theme = extendTheme({
       error: "#ff5b5b",
       spotify: "#1ED760",
       lightSpotify: "#1ed75f9b",
+      solana: "#9945FF",
+      lightSolana: "#9945ff9d",
     },
   },
   fonts,

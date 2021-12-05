@@ -13,20 +13,18 @@ import { GithubCalendar } from "../components/Widgets/GithubCalendar";
 import { GithubCommits } from "../components/Widgets/GithubCommits";
 import { GithubStars } from "../components/Widgets/GithubStars";
 import { SpotifyPlayer } from "../components/Widgets/SpotifyPlayer";
-import { TwitterFollowers } from "../components/Widgets/TwitterFollowers";
-import { TwitterPostTweet } from "../components/Widgets/TwitterPostTweet";
-import { TwitterTweets } from "../components/Widgets/TwitterTweets";
 import Cookies from "js-cookie";
+import { SolanaBalance } from "../components/Widgets/SolanaBalance";
+import { SolanaRentExempt } from "../components/Widgets/SolanaRentExempt";
 
-export type Service = "spotify" | "twitter" | "github";
+export type Service = "spotify" | "solana" | "github";
 export type WidgetName =
   | "player"
-  | "postTweet"
-  | "followers"
-  | "tweets"
   | "calendar"
   | "stars"
-  | "commits";
+  | "commits"
+  | "balance"
+  | "rentExempt";
 
 interface ServiceWidget {
   service: Service;
@@ -37,7 +35,7 @@ interface ServiceWidget {
 interface ServicesState {
   widgets: ServiceWidget[];
   spotify: null | { id: string; accessToken: string };
-  twitter: null | { id: string; accessToken: string };
+  solana: null | { id: string; accessToken: string };
   github: null | { id: string; accessToken: string };
 }
 
@@ -47,7 +45,7 @@ const emptyServicesContext: ServicesContext = [
   {
     widgets: [],
     spotify: null,
-    twitter: null,
+    solana: null,
     github: null,
   },
   () => {},
@@ -59,7 +57,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
   const [services, setServices] = useState({
     widgets: [],
     spotify: null,
-    twitter: null,
+    solana: null,
     github: null,
   });
   const router = useRouter();
@@ -67,19 +65,19 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
     const { access_token, expires_in, refresh_token, id } = router.query;
     const service = router.pathname.slice(1) as Service;
     if (access_token) {
-      storeUser(
+      storeUser({
         setServices,
-        id as string,
+        id: id as string,
         service,
-        access_token as string,
-        +expires_in,
-        refresh_token as string
-      );
+        accessToken: access_token as string,
+        expiresIn: +expires_in,
+        refreshToken: refresh_token as string,
+      });
       router.replace(service);
     }
   }, [router]);
   useEffect(() => {
-    ["spotify", "github", "twitter"].forEach((service) => {
+    ["spotify", "github", "solana"].forEach((service) => {
       const cookie = Cookies.get(service);
       if (cookie) {
         const { id, accessToken } = JSON.parse(cookie);
@@ -98,14 +96,21 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
   );
 }
 
-async function storeUser(
-  setServices: Dispatch<SetStateAction<ServicesState>>,
-  id: string,
-  service: Service,
-  accessToken: string,
-  expiresIn: number,
-  refreshToken: string
-) {
+export function storeUser({
+  setServices,
+  id,
+  service,
+  accessToken,
+  expiresIn,
+  refreshToken,
+}: {
+  setServices: Dispatch<SetStateAction<ServicesState>>;
+  id: string;
+  service: Service;
+  accessToken: string;
+  expiresIn?: number;
+  refreshToken?: string;
+}) {
   Cookies.set(service, JSON.stringify({ accessToken, refreshToken, id }));
   setServices((services) => ({ ...services, [service]: { accessToken, id } }));
 }
@@ -133,37 +138,32 @@ const allWidgets: { [k in WidgetName]: ServiceWidget } = {
   player: {
     service: "spotify",
     name: "player",
-    component: <SpotifyPlayer />,
-  },
-  postTweet: {
-    service: "twitter",
-    name: "postTweet",
-    component: <TwitterPostTweet />,
-  },
-  tweets: {
-    service: "twitter",
-    name: "tweets",
-    component: <TwitterTweets />,
-  },
-  followers: {
-    service: "twitter",
-    name: "followers",
-    component: <TwitterFollowers />,
+    component: <SpotifyPlayer key="player" />,
   },
   calendar: {
     service: "github",
     name: "calendar",
-    component: <GithubCalendar />,
+    component: <GithubCalendar key="calendar" />,
   },
   stars: {
     service: "github",
     name: "stars",
-    component: <GithubStars />,
+    component: <GithubStars key="stars" />,
   },
   commits: {
     service: "github",
     name: "commits",
-    component: <GithubCommits />,
+    component: <GithubCommits key="commits" />,
+  },
+  balance: {
+    service: "solana",
+    name: "balance",
+    component: <SolanaBalance key="balance" />,
+  },
+  rentExempt: {
+    service: "solana",
+    name: "rentExempt",
+    component: <SolanaRentExempt key="rentExempt" />,
   },
 };
 
@@ -198,10 +198,9 @@ export const displayNames: { [K in WidgetName]: string } = {
   player: "Spotify Player",
   calendar: "Contribution Calendar",
   commits: "Github Commits",
-  followers: "Followers Count",
-  postTweet: "Tweet Poster",
   stars: "Repo Stars",
-  tweets: "Tweet count",
+  balance: "Sol Balance",
+  rentExempt: "Solana Rent exemption",
 };
 
 export function useUser(

@@ -1,23 +1,25 @@
 import { Login } from "../components/Login";
 import { ServiceContainer } from "../components/ServiceContainer";
+// import { SolanaBalance } from "../components/Widgets/SolanaBalance";
 import { getAvailableWidgets, useUser, useWidgets } from "../hooks/useServices";
 
-export default function Spotify() {
-  const user = useUser("spotify");
-  const widgets = useWidgets("spotify");
-  const availableWidgets = getAvailableWidgets(widgets, "spotify");
+export default function Twitter() {
+  const user = useUser("solana");
+  const widgets = useWidgets("solana");
+  const availableWidgets = getAvailableWidgets(widgets, "solana");
 
   return (
     <ServiceContainer
-      title="Spotify"
-      description="Your Spotify widgets in a single place"
+      title="Solana"
+      description="Your Solana blockchain widgets in a single place"
       isLogged={user != null}
       availableWidgets={availableWidgets}
     >
       {user == null ? (
-        <Login service="spotify" />
+        <Login service="solana" />
       ) : (
         widgets.map((widget) => widget.component)
+        // <SolanaBalance />
       )}
     </ServiceContainer>
   );

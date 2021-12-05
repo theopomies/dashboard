@@ -1,10 +1,11 @@
 import { Link, Text, VStack } from "@chakra-ui/layout";
 import { useRouter } from "next/dist/client/router";
 import { GithubIcon } from "./icons/GithubIcon";
-import { HomeiIcon } from "./icons/HomeIcon";
+import { HomeIcon } from "./icons/HomeIcon";
 import { SpotifyIcon } from "./icons/SpotifyIcon";
 import { TwitterIcon } from "./icons/TwitterIcon";
 import NextLink from "next/link";
+import { SolanaIcon } from "./icons/SolanaIcon";
 
 export function Navbar() {
   const page = useRouter().route;
@@ -13,7 +14,7 @@ export function Navbar() {
     <VStack height="100%" justify="center" align="center" spacing={10}>
       <NextLink href="/">
         <Link>
-          <HomeiIcon
+          <HomeIcon
             h="2rem"
             w="2rem"
             fill={page == "/" ? "#1B1F23" : "brand.gray"}
@@ -31,7 +32,7 @@ export function Navbar() {
           />
         </Link>
       </NextLink>
-      <NextLink href="/twitter">
+      {/* <NextLink href="/twitter">
         <Link>
           <TwitterIcon
             h="2rem"
@@ -40,7 +41,7 @@ export function Navbar() {
             _hover={{ fill: "brand.twitter" }}
           />
         </Link>
-      </NextLink>
+      </NextLink> */}
       <NextLink href="/github">
         <Link>
           <GithubIcon
@@ -48,6 +49,16 @@ export function Navbar() {
             w="2rem"
             fill={page == "/github" ? "#1B1F23" : "brand.gray"}
             _hover={{ fill: "#1B1F23" }}
+          />
+        </Link>
+      </NextLink>
+      <NextLink href="/solana">
+        <Link>
+          <SolanaIcon
+            h="2rem"
+            w="2rem"
+            fill={page == "/solana" ? "brand.solana" : "brand.gray"}
+            _hover={{ fill: "brand.solana" }}
           />
         </Link>
       </NextLink>

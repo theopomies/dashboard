@@ -45,9 +45,9 @@ export function ServiceContainer({
     a.service > b.service ? 1 : a.service < b.service ? -1 : 0
   );
   const spotify = availableWidgets.filter((w) => w.service == "spotify");
-  const twitter = availableWidgets.filter((w) => w.service == "twitter");
+  const solana = availableWidgets.filter((w) => w.service == "solana");
   const github = availableWidgets.filter((w) => w.service == "github");
-  const widgets = { spotify, twitter, github };
+  const widgets = { spotify, solana, github };
 
   return (
     <Container maxW="140ch" padding="2rem" h="100%">
