@@ -1,5 +1,5 @@
-import { Button, IconButton } from "@chakra-ui/button";
-import { Box, Center, Heading, HStack, Text, VStack } from "@chakra-ui/layout";
+import { Button } from "@chakra-ui/button";
+import { Heading, VStack } from "@chakra-ui/layout";
 
 import { WidgetCard } from "./WidgetCard";
 import { useUser } from "../../hooks/useServices";
@@ -19,7 +19,7 @@ export function SpotifyPlayer() {
     });
   }, [user]);
   useEffect(() => {
-    spotifyApi.getUserPlaylists(user.id).then((value) =>
+    spotifyApi.getUserPlaylists().then((value) =>
       setPlaylists(
         value.items.map((item) => ({
           uri: item.uri.split(":").slice(1).join("/"),
@@ -41,7 +41,9 @@ export function SpotifyPlayer() {
           allow="encrypted-media"
         />
         <VStack overflow="scroll" h="100%">
-          <Heading>My Playlists</Heading>
+          <Heading margin="0.3rem" size="lg">
+            My Playlists
+          </Heading>
           {playlists.map((p) => (
             <Button
               w="100%"
