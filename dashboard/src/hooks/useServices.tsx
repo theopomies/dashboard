@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   createContext,
   Dispatch,
@@ -15,6 +16,7 @@ import { SpotifyPlayer } from "../components/Widgets/SpotifyPlayer";
 import { TwitterFollowers } from "../components/Widgets/TwitterFollowers";
 import { TwitterPostTweet } from "../components/Widgets/TwitterPostTweet";
 import { TwitterTweets } from "../components/Widgets/TwitterTweets";
+import Cookies from "js-cookie";
 
 export type Service = "spotify" | "twitter" | "github";
 export type WidgetName =
@@ -34,9 +36,9 @@ interface ServiceWidget {
 
 interface ServicesState {
   widgets: ServiceWidget[];
-  spotifyToken: null | string;
-  twitterToken: null | string;
-  githubToken: null | string;
+  spotify: null | { id: string; accessToken: string };
+  twitter: null | { id: string; accessToken: string };
+  github: null | { id: string; accessToken: string };
 }
 
 type ServicesContext = [ServicesState, Dispatch<SetStateAction<ServicesState>>];
@@ -44,9 +46,9 @@ type ServicesContext = [ServicesState, Dispatch<SetStateAction<ServicesState>>];
 const emptyServicesContext: ServicesContext = [
   {
     widgets: [],
-    spotifyToken: null,
-    twitterToken: null,
-    githubToken: null,
+    spotify: null,
+    twitter: null,
+    github: null,
   },
   () => {},
 ];
@@ -56,17 +58,56 @@ const ServicesContext = createContext<ServicesContext>(emptyServicesContext);
 export function ServicesProvider({ children }: { children: ReactNode }) {
   const [services, setServices] = useState({
     widgets: [],
-    spotifyToken: null,
-    twitterToken: null,
-    githubToken: null,
+    spotify: null,
+    twitter: null,
+    github: null,
   });
+  const router = useRouter();
+  useEffect(() => {
+    const { access_token, expires_in, refresh_token, id } = router.query;
+    const service = router.pathname.slice(1) as Service;
+    if (access_token) {
+      storeUser(
+        setServices,
+        id as string,
+        service,
+        access_token as string,
+        +expires_in,
+        refresh_token as string
+      );
+      router.replace(service);
+    }
+  }, [router]);
+  useEffect(() => {
+    ["spotify", "github", "twitter"].forEach((service) => {
+      const cookie = Cookies.get(service);
+      if (cookie) {
+        const { id, accessToken } = JSON.parse(cookie);
+        setServices((services) => ({
+          ...services,
+          [service]: { id, accessToken },
+        }));
+      }
+    });
+  }, []);
 
-  useEffect(() => {}, []);
   return (
     <ServicesContext.Provider value={[services, setServices]}>
       {children}
     </ServicesContext.Provider>
   );
+}
+
+async function storeUser(
+  setServices: Dispatch<SetStateAction<ServicesState>>,
+  id: string,
+  service: Service,
+  accessToken: string,
+  expiresIn: number,
+  refreshToken: string
+) {
+  Cookies.set(service, JSON.stringify({ accessToken, refreshToken, id }));
+  setServices((services) => ({ ...services, [service]: { accessToken, id } }));
 }
 
 export function useServices(): ServicesContext {
@@ -162,3 +203,10 @@ export const displayNames: { [K in WidgetName]: string } = {
   stars: "Repo Stars",
   tweets: "Tweet count",
 };
+
+export function useUser(
+  service: Service
+): null | { id: string; accessToken: string } {
+  const [services] = useServices();
+  return services[service];
+}

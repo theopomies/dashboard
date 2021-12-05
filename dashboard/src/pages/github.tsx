@@ -1,5 +1,5 @@
 import { ServiceContainer } from "../components/ServiceContainer";
-import { getAvailableWidgets, useWidgets } from "../hooks/useWidgets";
+import { getAvailableWidgets, useWidgets } from "../hooks/useServices";
 
 export default function Github() {
   const widgets = useWidgets("github");

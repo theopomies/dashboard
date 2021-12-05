@@ -1,118 +1,59 @@
-import { IconButton } from "@chakra-ui/button";
-import { Heading, HStack, Text, VStack } from "@chakra-ui/layout";
-import { BiSkipNext, BiSkipPrevious, BiSquare } from "react-icons/bi";
-import {
-  ImVolumeHigh,
-  ImVolumeLow,
-  ImVolumeMedium,
-  ImVolumeMute,
-  ImVolumeMute2,
-} from "react-icons/im";
-import { AiFillPlayCircle, AiFillPauseCircle } from "react-icons/ai";
-import { JSXElementConstructor, ReactElement, useState } from "react";
-import {
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-} from "@chakra-ui/react";
+import { Button, IconButton } from "@chakra-ui/button";
+import { Box, Center, Heading, HStack, Text, VStack } from "@chakra-ui/layout";
+
 import { WidgetCard } from "./WidgetCard";
+import { useUser } from "../../hooks/useServices";
+import SpotifyWebApi from "spotify-web-api-js";
+import { useEffect, useState } from "react";
 
 export function SpotifyPlayer() {
-  const [playing, setPlaying] = useState(true);
-  const [hover, setHover] = useState(false);
-  const [focus, setFocus] = useState(false);
-  const [muted, setMuted] = useState(false);
-  const [volume, setVolume] = useState(50);
+  const user = useUser("spotify");
+  const [spotifyApi, setSpotifyApi] = useState(new SpotifyWebApi());
+  const [link, setLink] = useState("album/1DFixLWuPkv3KT3TnV35m3");
+  const [playlists, setPlaylists] = useState([]);
+
+  useEffect(() => {
+    setSpotifyApi((spotifyApi) => {
+      spotifyApi.setAccessToken(user.accessToken);
+      return spotifyApi;
+    });
+  }, [user]);
+  useEffect(() => {
+    spotifyApi.getUserPlaylists(user.id).then((value) =>
+      setPlaylists(
+        value.items.map((item) => ({
+          uri: item.uri.split(":").slice(1).join("/"),
+          name: item.name,
+        }))
+      )
+    );
+  }, [spotifyApi]);
 
   return (
-    <WidgetCard rowSpan={2} colSpan={2} name="player">
-      <HStack h="100%" w="100%" justify="start" spacing={40}>
-        <BiSquare size="10rem" />
-        <HStack w="100%" justify="space-between">
-          <VStack>
-            <Heading size="lg">Titre</Heading>
-            <Text color="brand.darkGray">Artiste(s)</Text>
-            <HStack>
-              <IconButton
-                bg="transparent"
-                color="brand.darkGray"
-                _hover={{ bg: "transparent", color: "black" }}
-                aria-label="previous"
-                icon={<BiSkipPrevious size="2rem" />}
-              />
-              <IconButton
-                onClick={() => setPlaying((playing) => !playing)}
-                aria-label="pause/resume"
-                bg="transparent"
-                _hover={{ bg: "transparent", transform: "scale(1.05)" }}
-                icon={
-                  playing ? (
-                    <AiFillPauseCircle size="3rem" />
-                  ) : (
-                    <AiFillPlayCircle size="3rem" />
-                  )
-                }
-              />
-              <IconButton
-                bg="transparent"
-                color="brand.darkGray"
-                _hover={{ bg: "transparent", color: "black" }}
-                aria-label="next"
-                icon={<BiSkipNext size="2rem" />}
-              />
-            </HStack>
-          </VStack>
-          <HStack
-            padding="1rem"
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-            w="10rem"
-          >
-            <IconButton
-              aria-label="volume logo"
-              icon={getVolumeIcon(volume, muted)}
-              onClick={() => setMuted((muted) => !muted)}
-              color="brand.darkGray"
-              bg="transparent"
-              _hover={{ bg: "transparent", color: "black" }}
-            />
-            <Slider
-              aria-label="spotify volume"
-              defaultValue={50}
-              value={muted ? 0 : volume}
-              onChange={(e) => {
-                setVolume(e), setMuted(false);
-              }}
-              onFocus={() => setFocus(true)}
-              onBlur={() => {
-                setFocus(false);
-              }}
+    <WidgetCard rowSpan={2} colSpan={1} name="player">
+      <VStack h="100%">
+        <iframe
+          src={`https://open.spotify.com/embed/${link}`}
+          width="300"
+          height="80"
+          frameBorder="0"
+          allowTransparency={true}
+          allow="encrypted-media"
+        />
+        <VStack overflow="scroll" h="100%">
+          <Heading>My Playlists</Heading>
+          {playlists.map((p) => (
+            <Button
+              w="100%"
+              padding="0.3rem"
+              key={p.name}
+              onClick={() => setLink(p.uri)}
             >
-              <SliderTrack>
-                <SliderFilledTrack
-                  bg={hover || focus ? "brand.spotify" : "brand.lightGray"}
-                />
-              </SliderTrack>
-              {(hover || focus) && <SliderThumb />}
-            </Slider>
-          </HStack>
-        </HStack>
-      </HStack>
+              {p.name}
+            </Button>
+          ))}
+        </VStack>
+      </VStack>
     </WidgetCard>
   );
-}
-
-function getVolumeIcon(
-  volume: number,
-  muted: boolean
-): ReactElement<any, string | JSXElementConstructor<any>> {
-  const props = {
-    size: "1.5rem",
-  };
-  if (muted) return <ImVolumeMute2 {...props} />;
-  if (volume < 10) return <ImVolumeMute {...props} />;
-  if (volume < 30) return <ImVolumeLow {...props} />;
-  if (volume < 70) return <ImVolumeMedium {...props} />;
-  return <ImVolumeHigh {...props} />;
 }

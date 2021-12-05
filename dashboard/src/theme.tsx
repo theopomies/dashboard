@@ -25,10 +25,13 @@ const theme = extendTheme({
       lightTwitter: "#1da0f21d",
       error: "#ff5b5b",
       spotify: "#1ED760",
+      lightSpotify: "#1ed75f9b",
     },
   },
   fonts,
   breakpoints,
+  useSystemColorMode: false,
+  initialColorMode: "light",
 });
 
 export default theme;

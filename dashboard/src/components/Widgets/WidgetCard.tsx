@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/button";
 import { CloseIcon } from "@chakra-ui/icons";
 import { GridItem, GridItemProps } from "@chakra-ui/layout";
-import { removeWidget, useServices, WidgetName } from "../../hooks/useWidgets";
+import { removeWidget, useServices, WidgetName } from "../../hooks/useServices";
 
 export function WidgetCard({
   children,

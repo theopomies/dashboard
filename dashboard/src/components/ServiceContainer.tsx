@@ -1,4 +1,5 @@
 import {
+  Box,
   Container,
   Divider,
   Flex,
@@ -24,7 +25,7 @@ import {
   Service,
   useServices,
   WidgetName,
-} from "../hooks/useWidgets";
+} from "../hooks/useServices";
 
 export function ServiceContainer({
   title,
@@ -73,7 +74,7 @@ export function ServiceContainer({
                 </PopoverHeader>
                 <PopoverBody>
                   {Object.entries(widgets).map(([name, widgets]) => (
-                    <>
+                    <Box key={name}>
                       {widgets.length > 0 && (
                         <>
                           <Heading size="xs">
@@ -91,7 +92,7 @@ export function ServiceContainer({
                           ))}
                         </>
                       )}
-                    </>
+                    </Box>
                   ))}
                 </PopoverBody>
               </PopoverContent>

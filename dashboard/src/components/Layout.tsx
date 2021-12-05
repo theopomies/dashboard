@@ -1,9 +1,13 @@
+import { useColorMode } from "@chakra-ui/color-mode";
 import { Center, Grid, GridItem } from "@chakra-ui/layout";
 import { ReactNode } from "react";
 import { DateDisplayer } from "../components/Date";
 import { Navbar } from "./Navbar";
 
 export function Layout({ children }: { children: ReactNode }) {
+  const { colorMode, toggleColorMode } = useColorMode();
+  if (colorMode == "dark") toggleColorMode();
+
   return (
     <main>
       <Grid
