@@ -1,12 +1,13 @@
 import { GridItem, HStack } from "@chakra-ui/layout";
 import { Service, useUser } from "../hooks/useServices";
+import { GithubLogin } from "./GithubLogin";
 import { SolanaLogin } from "./SolanaLogin";
 import { SpotifyLogin } from "./SpotifyLogin";
 
 export function Login({ service }: { service?: Service }) {
   const spotifyAccount = useUser("spotify");
   const solanaAccount = useUser("solana");
-  // const githubAccount = useGithub();
+  const githubAccount = useUser("github");
   return (
     <GridItem
       colSpan={3}
@@ -20,7 +21,8 @@ export function Login({ service }: { service?: Service }) {
           spotifyAccount == undefined && <SpotifyLogin />}
         {(service == undefined || service == "solana") &&
           solanaAccount == undefined && <SolanaLogin />}
-        {/* {(service == undefined || service == "github") && githubAccount == undefined && <GithubLogin />} */}
+        {(service == undefined || service == "github") &&
+          githubAccount == undefined && <GithubLogin />}
       </HStack>
     </GridItem>
   );

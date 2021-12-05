@@ -1,7 +1,9 @@
+import { Login } from "../components/Login";
 import { ServiceContainer } from "../components/ServiceContainer";
-import { getAvailableWidgets, useWidgets } from "../hooks/useServices";
+import { getAvailableWidgets, useUser, useWidgets } from "../hooks/useServices";
 
 export default function Github() {
+  const user = useUser("github");
   const widgets = useWidgets("github");
   const availableWidgets = getAvailableWidgets(widgets, "github");
 
@@ -9,10 +11,14 @@ export default function Github() {
     <ServiceContainer
       title="Github"
       description="Your Github widgets in a single place"
-      isLogged={true}
+      isLogged={user != null}
       availableWidgets={availableWidgets}
     >
-      {widgets.map((widget) => widget.component)}
+      {user == null ? (
+        <Login service="github" />
+      ) : (
+        widgets.map((widget) => widget.component)
+      )}
     </ServiceContainer>
   );
 }

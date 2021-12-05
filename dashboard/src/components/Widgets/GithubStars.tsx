@@ -1,9 +1,48 @@
 import { StarIcon } from "@chakra-ui/icons";
 import { Flex, Heading, HStack, VStack } from "@chakra-ui/layout";
+import Github from "github-api";
+import { Select } from "@chakra-ui/select";
+import { useEffect, useState } from "react";
+import { useUser } from "../../hooks/useServices";
 import { formatBigNumber } from "../../utils/formatBigNumber";
 import { WidgetCard } from "./WidgetCard";
 
 export function GithubStars() {
+  const user = useUser("github");
+  const [github, setGithub] = useState<Github>(null);
+  const [repos, setRepos] = useState<
+    { fullName: string; stargazersCount: number }[]
+  >([]);
+  const [repo, setRepo] = useState(0);
+
+  useEffect(() => {
+    if (!user) {
+      setGithub(null);
+      setRepos([]);
+      return;
+    }
+    setGithub(new Github({ token: user.accessToken }));
+  }, [user]);
+
+  const updateRepos = () => {
+    if (!github) return;
+    github.getUser().listRepos((_error, repos) => {
+      setRepos(
+        repos.map(
+          ({ full_name: fullName, stargazers_count: stargazersCount }) => ({
+            fullName,
+            stargazersCount,
+          })
+        )
+      );
+    });
+  };
+
+  useEffect(() => {
+    updateRepos();
+    const interval = setInterval(() => updateRepos(), 60000);
+    return () => clearInterval(interval);
+  }, [github]);
   return (
     <WidgetCard rowSpan={1} name="stars">
       <HStack h="100%" spacing={10}>
@@ -18,9 +57,20 @@ export function GithubStars() {
           <StarIcon fontSize="2rem" color="brand.darkGray" />
         </Flex>
         <VStack align="flex-start">
-          <Heading>{formatBigNumber(49874)}</Heading>
+          <Heading>
+            {formatBigNumber(
+              repos.length > repo ? repos[repo].stargazersCount : 0
+            )}
+          </Heading>
           <Heading size="sm" color="brand.gray" fontWeight="regular">
-            Stars on <strong>user/repo</strong>
+            Stars on{" "}
+            <Select value={repo} onChange={(v) => setRepo(+v.target.value)}>
+              {repos.map((repo, idx) => (
+                <option key={idx} value={idx}>
+                  {repo.fullName}
+                </option>
+              ))}
+            </Select>
           </Heading>
         </VStack>
       </HStack>

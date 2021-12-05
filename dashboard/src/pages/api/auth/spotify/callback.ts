@@ -31,12 +31,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       spotifyApi.setAccessToken(body.access_token);
       spotifyApi
         .getMe()
-        .then((value) =>
-        {console.log(value);
+        .then((value) => {
+          console.log(value);
           res.redirect(
             `/spotify?access_token=${body.access_token}&refresh_token=${body.refresh_token}&expires_in=${body.expires_in}&id=${value.id}`
-          )}
-        )
+          );
+        })
         .catch(() => res.redirect("/"));
     }
   });
