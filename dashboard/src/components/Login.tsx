@@ -1,4 +1,4 @@
-import { GridItem, HStack } from "@chakra-ui/layout";
+import { GridItem, VStack } from "@chakra-ui/layout";
 import { Service, useUser } from "../hooks/useServices";
 import { GithubLogin } from "./GithubLogin";
 import { SolanaLogin } from "./SolanaLogin";
@@ -16,14 +16,14 @@ export function Login({ service }: { service?: Service }) {
       justifyContent="center"
       alignItems="center"
     >
-      <HStack>
+      <VStack>
         {(service == undefined || service == "spotify") &&
           spotifyAccount == undefined && <SpotifyLogin />}
         {(service == undefined || service == "solana") &&
           solanaAccount == undefined && <SolanaLogin />}
         {(service == undefined || service == "github") &&
           githubAccount == undefined && <GithubLogin />}
-      </HStack>
+      </VStack>
     </GridItem>
   );
 }

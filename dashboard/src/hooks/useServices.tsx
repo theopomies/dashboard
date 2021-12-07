@@ -37,29 +37,33 @@ interface ServicesState {
   spotify: null | { id: string; accessToken: string };
   solana: null | { id: string; accessToken: string };
   github: null | { id: string; accessToken: string };
+  actives: {
+    spotify: boolean;
+    solana: boolean;
+    github: boolean;
+  };
 }
 
 type ServicesContext = [ServicesState, Dispatch<SetStateAction<ServicesState>>];
 
-const emptyServicesContext: ServicesContext = [
-  {
-    widgets: [],
-    spotify: null,
-    solana: null,
-    github: null,
+const emptyServicesState: ServicesState = {
+  widgets: [],
+  spotify: null,
+  solana: null,
+  github: null,
+  actives: {
+    spotify: false,
+    solana: false,
+    github: false,
   },
-  () => {},
-];
+};
+
+const emptyServicesContext: ServicesContext = [emptyServicesState, () => {}];
 
 const ServicesContext = createContext<ServicesContext>(emptyServicesContext);
 
 export function ServicesProvider({ children }: { children: ReactNode }) {
-  const [services, setServices] = useState({
-    widgets: [],
-    spotify: null,
-    solana: null,
-    github: null,
-  });
+  const [services, setServices] = useState(emptyServicesState);
   const router = useRouter();
   useEffect(() => {
     const { access_token, expires_in, refresh_token, id } = router.query;
@@ -113,6 +117,43 @@ export function storeUser({
 }) {
   Cookies.set(service, JSON.stringify({ accessToken, refreshToken, id }));
   setServices((services) => ({ ...services, [service]: { accessToken, id } }));
+}
+
+export function disconnectUser({
+  setServices,
+  service,
+}: {
+  setServices: Dispatch<SetStateAction<ServicesState>>;
+  service: Service;
+}) {
+  Cookies.remove(service);
+  setServices((services) => ({ ...services, [service]: null }));
+}
+
+export function enableService({
+  setServices,
+  service,
+}: {
+  setServices: Dispatch<SetStateAction<ServicesState>>;
+  service: Service;
+}) {
+  setServices((services) => ({
+    ...services,
+    actives: { ...services.actives, [service]: true },
+  }));
+}
+
+export function disableService({
+  setServices,
+  service,
+}: {
+  setServices: Dispatch<SetStateAction<ServicesState>>;
+  service: Service;
+}) {
+  setServices((services) => ({
+    ...services,
+    actives: { ...services.actives, [service]: false },
+  }));
 }
 
 export function useServices(): ServicesContext {
