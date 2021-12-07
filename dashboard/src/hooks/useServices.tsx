@@ -163,8 +163,10 @@ export function useServices(): ServicesContext {
 export function useWidgets(service?: Service): ServiceWidget[] {
   const [services] = useContext(ServicesContext);
   if (service)
-    return services.widgets.filter((widget) => widget.service == service);
-  return services.widgets;
+    return services.widgets.filter(
+      (widget) => services.actives[widget.service] && widget.service == service
+    );
+  return services.widgets.filter((widget) => services.actives[widget.service]);
 }
 
 export function removeWidget(context: ServicesContext, name: WidgetName) {
