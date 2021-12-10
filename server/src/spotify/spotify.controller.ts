@@ -8,13 +8,13 @@ export class SpotifyController {
   constructor(private readonly spotifyService: SpotifyService) {}
 
   @Get()
-  async getStatus(@Param('id') id): Promise<Spotify> {
+  async getStatus(@Param('id') id: string): Promise<Spotify> {
     return this.spotifyService.getStatus(id);
   }
 
   @Put()
   async putStatus(
-    @Param('id') id,
+    @Param('id') id: string,
     @Body() body: UpdateSpotifyDto,
   ): Promise<Spotify> {
     return this.spotifyService.putStatus(id, body);

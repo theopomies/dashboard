@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { GithubModule } from './github/github.module';
+import { SolanaModule } from './solana/solana.module';
 import { SpotifyModule } from './spotify/spotify.module';
 
 const config: PostgresConnectionOptions = {
@@ -16,7 +18,12 @@ const config: PostgresConnectionOptions = {
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
 };
 @Module({
-  imports: [SpotifyModule, TypeOrmModule.forRoot(config)],
+  imports: [
+    SpotifyModule,
+    SolanaModule,
+    GithubModule,
+    TypeOrmModule.forRoot(config),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
