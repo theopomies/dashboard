@@ -3,7 +3,7 @@ import { storeUser, useServices } from "../hooks/useServices";
 import { SolanaIcon } from "./icons/SolanaIcon";
 
 export function SolanaLogin() {
-  const [, setServices] = useServices();
+  const [services, setServices] = useServices();
   const login = async () => {
     try {
       const { solana } = window as any;
@@ -13,7 +13,8 @@ export function SolanaLogin() {
             .connect({ onlyIfTrusted: true })
             .catch(async () => await solana.connect());
           const walletAddress = response.publicKey.toString();
-          storeUser({
+          await storeUser({
+            services: services,
             service: "solana",
             accessToken: walletAddress,
             id: walletAddress,

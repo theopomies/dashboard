@@ -12,5 +12,5 @@ export class Solana {
   balanceWidgetActive: boolean;
 
   @Column()
-  rentWidgetActive: boolean;
+  rentExemptWidgetActive: boolean;
 }

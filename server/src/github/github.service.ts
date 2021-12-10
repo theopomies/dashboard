@@ -21,6 +21,7 @@ export class GithubService {
         commitsWidgetId: 0,
         starsWidgetActive: false,
         starsWidgetId: 0,
+        calendarWidgetActive: false,
       });
 
       return this.repository.save(github);
@@ -38,6 +39,7 @@ export class GithubService {
       commitsWidgetId: updateGithubDto.commitsWidgetId,
       starsWidgetActive: updateGithubDto.starsWidgetActive,
       starsWidgetId: updateGithubDto.starsWidgetId,
+      calendarWidgetActive: updateGithubDto.calendarWidgetActive,
     });
 
     return this.repository.save(github);

@@ -113,6 +113,7 @@ export function Layout({ children }: { children: ReactNode }) {
                                   disableService({
                                     service: service as Service,
                                     setServices,
+                                    services,
                                   })
                                 }
                               >
@@ -124,6 +125,7 @@ export function Layout({ children }: { children: ReactNode }) {
                                   enableService({
                                     service: service as Service,
                                     setServices,
+                                    services,
                                   })
                                 }
                                 colorScheme="green"

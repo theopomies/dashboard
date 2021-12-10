@@ -16,6 +16,9 @@ import { SpotifyPlayer } from "../components/Widgets/SpotifyPlayer";
 import Cookies from "js-cookie";
 import { SolanaBalance } from "../components/Widgets/SolanaBalance";
 import { SolanaRentExempt } from "../components/Widgets/SolanaRentExempt";
+import axios from "axios";
+
+const endpoint = (service: Service) => `http://localhost:8080/${service}/`;
 
 export type Service = "spotify" | "solana" | "github";
 export type WidgetName =
@@ -76,6 +79,7 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
         accessToken: access_token as string,
         expiresIn: +expires_in,
         refreshToken: refresh_token as string,
+        services,
       });
       router.replace(service);
     }
@@ -85,6 +89,12 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
       const cookie = Cookies.get(service);
       if (cookie) {
         const { id, accessToken } = JSON.parse(cookie);
+        setServicesFromApi({
+          service: service as Service,
+          services,
+          setServices,
+          id,
+        });
         setServices((services) => ({
           ...services,
           [service]: { id, accessToken },
@@ -100,23 +110,72 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function storeUser({
+async function setServicesFromApi({
+  service,
+  services,
+  setServices,
+  id,
+}: {
+  setServices: Dispatch<SetStateAction<ServicesState>>;
+  service: Service;
+  services: ServicesState;
+  id: string;
+}) {
+  const response = await axios.get(endpoint(service) + id);
+  if (service == "github") {
+    if (response.data.calendarWidgetActive)
+      addWidget([services, setServices], "calendar", true);
+    else removeWidget([services, setServices], "calendar", true);
+    if (response.data.starsWidgetActive)
+      addWidget([services, setServices], "stars", true);
+    else removeWidget([services, setServices], "stars", true);
+    if (response.data.commitsWidgetActive)
+      addWidget([services, setServices], "commits", true);
+    else removeWidget([services, setServices], "commits", true);
+  } else if (service == "solana") {
+    if (response.data.balanceWidgetActive)
+      addWidget([services, setServices], "balance", true);
+    else removeWidget([services, setServices], "balance", true);
+    if (response.data.rentExemptWidgetActive)
+      addWidget([services, setServices], "rentExempt", true);
+    else removeWidget([services, setServices], "rentExempt", true);
+  } else {
+    if (response.data.playerWidgetActive)
+      addWidget([services, setServices], "player", true);
+    else removeWidget([services, setServices], "player", true);
+  }
+  return response;
+}
+
+export async function storeUser({
   setServices,
   id,
   service,
   accessToken,
   expiresIn,
   refreshToken,
+  services,
 }: {
   setServices: Dispatch<SetStateAction<ServicesState>>;
-  id: string;
   service: Service;
+  services: ServicesState;
+  id: string;
   accessToken: string;
   expiresIn?: number;
   refreshToken?: string;
 }) {
   Cookies.set(service, JSON.stringify({ accessToken, refreshToken, id }));
-  setServices((services) => ({ ...services, [service]: { accessToken, id } }));
+  const response = await setServicesFromApi({
+    service,
+    services,
+    setServices,
+    id,
+  });
+  setServices((services) => ({
+    ...services,
+    actives: { ...services.actives, [service]: response.data.active },
+    [service]: { accessToken, id },
+  }));
 }
 
 export function disconnectUser({
@@ -133,10 +192,14 @@ export function disconnectUser({
 export function enableService({
   setServices,
   service,
+  services,
 }: {
   setServices: Dispatch<SetStateAction<ServicesState>>;
   service: Service;
+  services: ServicesState;
 }) {
+  const { id } = services[service];
+  axios.put(endpoint(service) + id, { active: true }).catch(console.log);
   setServices((services) => ({
     ...services,
     actives: { ...services.actives, [service]: true },
@@ -146,10 +209,14 @@ export function enableService({
 export function disableService({
   setServices,
   service,
+  services,
 }: {
   setServices: Dispatch<SetStateAction<ServicesState>>;
   service: Service;
+  services: ServicesState;
 }) {
+  const { id } = services[service];
+  axios.put(endpoint(service) + id, { active: false }).catch(console.log);
   setServices((services) => ({
     ...services,
     actives: { ...services.actives, [service]: false },
@@ -175,8 +242,19 @@ export function useWidgets(service?: Service): ServiceWidget[] {
   );
 }
 
-export function removeWidget(context: ServicesContext, name: WidgetName) {
-  const [, setServices] = context;
+export function removeWidget(
+  context: ServicesContext,
+  name: WidgetName,
+  dontPersist: boolean = false
+) {
+  const [services, setServices] = context;
+  if (!dontPersist) {
+    const service = allWidgets[name].service;
+    const { id } = services[service];
+    axios
+      .put(endpoint(service) + id, { [`${name}WidgetActive`]: false })
+      .catch(console.log);
+  }
   setServices(({ widgets, ...services }) => ({
     ...services,
     widgets: widgets.filter((widget) => widget.name != name),
@@ -216,11 +294,21 @@ const allWidgets: { [k in WidgetName]: ServiceWidget } = {
   },
 };
 
-export function addWidget(context: ServicesContext, name: WidgetName) {
+export function addWidget(
+  context: ServicesContext,
+  name: WidgetName,
+  dontPersist: boolean = false
+) {
   const [services, setServices] = context;
 
   if (services.widgets.some((widget) => widget.name == name)) return;
-
+  if (!dontPersist) {
+    const service = allWidgets[name].service;
+    const { id } = services[service];
+    axios
+      .put(endpoint(service) + id, { [`${name}WidgetActive`]: true })
+      .catch(console.log);
+  }
   setServices(({ widgets, ...services }) => ({
     ...services,
     widgets: [...widgets, allWidgets[name]],

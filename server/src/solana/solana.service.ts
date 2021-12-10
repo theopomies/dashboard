@@ -18,7 +18,7 @@ export class SolanaService {
         id,
         active: false,
         balanceWidgetActive: false,
-        rentWidgetActive: false,
+        rentExemptWidgetActive: false,
       });
 
       return this.repository.save(solana);
@@ -33,7 +33,7 @@ export class SolanaService {
       id,
       active: updateSolanaDto.active,
       balanceWidgetActive: updateSolanaDto.balanceWidgetActive,
-      rentWidgetActive: updateSolanaDto.rentWidgetActive,
+      rentExemptWidgetActive: updateSolanaDto.rentExemptWidgetActive,
     });
 
     return this.repository.save(solana);

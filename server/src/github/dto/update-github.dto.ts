@@ -4,4 +4,5 @@ export class UpdateGithubDto {
   starsWidgetId?: number;
   commitsWidgetActive?: boolean;
   commitsWidgetId?: number;
+  calendarWidgetActive?: boolean;
 }

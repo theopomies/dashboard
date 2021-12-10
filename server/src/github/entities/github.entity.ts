@@ -19,4 +19,7 @@ export class Github {
 
   @Column()
   commitsWidgetId: number;
+
+  @Column()
+  calendarWidgetActive: boolean;
 }
