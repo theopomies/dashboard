@@ -89,16 +89,17 @@ export function ServicesProvider({ children }: { children: ReactNode }) {
       const cookie = Cookies.get(service);
       if (cookie) {
         const { id, accessToken } = JSON.parse(cookie);
+        setServices((services) => ({
+          ...services,
+          [service]: { id, accessToken },
+        }));
         setServicesFromApi({
           service: service as Service,
           services,
           setServices,
           id,
+          accessToken,
         });
-        setServices((services) => ({
-          ...services,
-          [service]: { id, accessToken },
-        }));
       }
     });
   }, []);
@@ -115,20 +116,24 @@ async function setServicesFromApi({
   services,
   setServices,
   id,
+  accessToken,
 }: {
   setServices: Dispatch<SetStateAction<ServicesState>>;
   service: Service;
   services: ServicesState;
   id: string;
+  accessToken: string;
 }) {
   const response = await axios.get(endpoint(service) + id);
   if (service == "github") {
     if (response.data.calendarWidgetActive)
       addWidget([services, setServices], "calendar", true);
     else removeWidget([services, setServices], "calendar", true);
+
     if (response.data.starsWidgetActive)
       addWidget([services, setServices], "stars", true);
     else removeWidget([services, setServices], "stars", true);
+
     if (response.data.commitsWidgetActive)
       addWidget([services, setServices], "commits", true);
     else removeWidget([services, setServices], "commits", true);
@@ -136,6 +141,7 @@ async function setServicesFromApi({
     if (response.data.balanceWidgetActive)
       addWidget([services, setServices], "balance", true);
     else removeWidget([services, setServices], "balance", true);
+
     if (response.data.rentExemptWidgetActive)
       addWidget([services, setServices], "rentExempt", true);
     else removeWidget([services, setServices], "rentExempt", true);
@@ -144,7 +150,11 @@ async function setServicesFromApi({
       addWidget([services, setServices], "player", true);
     else removeWidget([services, setServices], "player", true);
   }
-  return response;
+  setServices((services) => ({
+    ...services,
+    actives: { ...services.actives, [service]: response.data.active },
+    [service]: { accessToken, id },
+  }));
 }
 
 export async function storeUser({
@@ -165,17 +175,13 @@ export async function storeUser({
   refreshToken?: string;
 }) {
   Cookies.set(service, JSON.stringify({ accessToken, refreshToken, id }));
-  const response = await setServicesFromApi({
+  await setServicesFromApi({
     service,
     services,
     setServices,
     id,
+    accessToken,
   });
-  setServices((services) => ({
-    ...services,
-    actives: { ...services.actives, [service]: response.data.active },
-    [service]: { accessToken, id },
-  }));
 }
 
 export function disconnectUser({
@@ -203,7 +209,10 @@ export function enableService({
   services: ServicesState;
 }) {
   const { id } = services[service];
-  axios.put(endpoint(service) + id, { active: true }).catch(console.log);
+  axios
+    .put(endpoint(service) + id, { active: true })
+    .then(console.log)
+    .catch(console.log);
   setServices((services) => ({
     ...services,
     actives: { ...services.actives, [service]: true },
@@ -220,7 +229,10 @@ export function disableService({
   services: ServicesState;
 }) {
   const { id } = services[service];
-  axios.put(endpoint(service) + id, { active: false }).catch(console.log);
+  axios
+    .put(endpoint(service) + id, { active: false })
+    .then(console.log)
+    .catch(console.log);
   setServices((services) => ({
     ...services,
     actives: { ...services.actives, [service]: false },
