@@ -32,9 +32,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       spotifyApi
         .getMe()
         .then((value) => {
-          console.log(value);
           res.redirect(
-            `/spotify?access_token=${body.access_token}&refresh_token=${body.refresh_token}&expires_in=${body.expires_in}&id=${value.id}`
+            `/spotify?access_token=${body.access_token}&refresh_token=${body.refresh_token}&expires_in=${body.expires_in}&id=${value.body.id}`
           );
         })
         .catch(() => res.redirect("/"));

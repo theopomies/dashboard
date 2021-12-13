@@ -1,11 +1,25 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Login } from "../components/Login";
 import { ServiceContainer } from "../components/ServiceContainer";
-import { getAvailableWidgets, useUser, useWidgets } from "../hooks/useServices";
+import {
+  getAvailableWidgets,
+  useServices,
+  useUser,
+  useWidgets,
+} from "../hooks/useServices";
 
 export default function Github() {
   const user = useUser("github");
   const widgets = useWidgets("github");
   const availableWidgets = getAvailableWidgets(widgets, "github");
+  const [services] = useServices();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router) return;
+    if (!services.actives.github) router.push("/");
+  }, [router, services]);
 
   return (
     <ServiceContainer

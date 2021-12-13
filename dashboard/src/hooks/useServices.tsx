@@ -186,7 +186,11 @@ export function disconnectUser({
   service: Service;
 }) {
   Cookies.remove(service);
-  setServices((services) => ({ ...services, [service]: null }));
+  setServices((services) => ({
+    ...services,
+    [service]: null,
+    actives: { ...services.actives, [service]: false },
+  }));
 }
 
 export function enableService({

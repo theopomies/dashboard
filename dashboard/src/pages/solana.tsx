@@ -1,12 +1,25 @@
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Login } from "../components/Login";
 import { ServiceContainer } from "../components/ServiceContainer";
-// import { SolanaBalance } from "../components/Widgets/SolanaBalance";
-import { getAvailableWidgets, useUser, useWidgets } from "../hooks/useServices";
+import {
+  getAvailableWidgets,
+  useServices,
+  useUser,
+  useWidgets,
+} from "../hooks/useServices";
 
 export default function Twitter() {
   const user = useUser("solana");
   const widgets = useWidgets("solana");
   const availableWidgets = getAvailableWidgets(widgets, "solana");
+  const [services] = useServices();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router) return;
+    if (!services.actives.solana) router.push("/");
+  }, [router, services]);
 
   return (
     <ServiceContainer
