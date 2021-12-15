@@ -3,9 +3,10 @@ import { Flex, Heading, HStack, VStack } from "@chakra-ui/layout";
 import Github from "github-api";
 import { Select } from "@chakra-ui/select";
 import { useEffect, useState } from "react";
-import { useUser } from "../../hooks/useServices";
+import { endpoint, useUser } from "../../hooks/useServices";
 import { formatBigNumber } from "../../utils/formatBigNumber";
 import { WidgetCard } from "./WidgetCard";
+import axios from "axios";
 
 export function GithubStars() {
   const user = useUser("github");
@@ -22,6 +23,10 @@ export function GithubStars() {
       return;
     }
     setGithub(new Github({ token: user.accessToken }));
+    axios
+      .get(endpoint("github") + user.id)
+      .then((res) => setRepo(res.data.starsWidgetId || 0))
+      .catch(console.log);
   }, [user]);
 
   const updateRepos = () => {
@@ -43,6 +48,13 @@ export function GithubStars() {
     const interval = setInterval(() => updateRepos(), 60000);
     return () => clearInterval(interval);
   }, [github]);
+
+  useEffect(() => {
+    axios
+      .put(endpoint("github") + user.id, { starsWidgetId: repo })
+      .catch(console.log);
+  }, [repo]);
+
   return (
     <WidgetCard rowSpan={1} name="stars">
       <HStack h="100%" spacing={10}>

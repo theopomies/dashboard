@@ -1,9 +1,10 @@
 import { CheckIcon } from "@chakra-ui/icons";
 import { Flex, Heading, HStack, VStack } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
+import axios from "axios";
 import Github from "github-api";
 import { useEffect, useState } from "react";
-import { useUser } from "../../hooks/useServices";
+import { endpoint, useUser } from "../../hooks/useServices";
 import { formatBigNumber } from "../../utils/formatBigNumber";
 import { WidgetCard } from "./WidgetCard";
 
@@ -28,6 +29,10 @@ export function GithubCommits() {
       return;
     }
     setGithub(new Github({ token: user.accessToken }));
+    axios
+      .get(endpoint("github") + user.id)
+      .then((res) => setRepo(res.data.commitsWidgetId || 0))
+      .catch(console.log);
   }, [user]);
 
   useEffect(() => {
@@ -42,6 +47,12 @@ export function GithubCommits() {
       .getRepo(repos[repo].owner.login, repos[repo].name)
       .listCommits((_error, commits) => setCommits(commits.length));
   }, [repo, repos]);
+
+  useEffect(() => {
+    axios
+      .put(endpoint("github") + user.id, { commitsWidgetId: repo })
+      .catch(console.log);
+  }, [repo]);
 
   return (
     <WidgetCard rowSpan={1} name="commits">

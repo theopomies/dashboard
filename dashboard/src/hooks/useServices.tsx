@@ -18,7 +18,8 @@ import { SolanaBalance } from "../components/Widgets/SolanaBalance";
 import { SolanaRentExempt } from "../components/Widgets/SolanaRentExempt";
 import axios from "axios";
 
-const endpoint = (service: Service) => `http://localhost:8080/${service}/`;
+export const endpoint = (service: Service) =>
+  `http://localhost:8080/${service}/`;
 
 export type Service = "spotify" | "solana" | "github";
 export type WidgetName =

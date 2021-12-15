@@ -2,14 +2,17 @@ import { Button } from "@chakra-ui/button";
 import { Heading, VStack } from "@chakra-ui/layout";
 
 import { WidgetCard } from "./WidgetCard";
-import { useUser } from "../../hooks/useServices";
+import { endpoint, useUser } from "../../hooks/useServices";
 import SpotifyWebApi from "spotify-web-api-js";
 import { useEffect, useState } from "react";
+import axios from "axios";
+
+const DEFAULT_PLAYLIST = "album/1DFixLWuPkv3KT3TnV35m3";
 
 export function SpotifyPlayer() {
   const user = useUser("spotify");
   const [spotifyApi, setSpotifyApi] = useState(new SpotifyWebApi());
-  const [link, setLink] = useState("album/1DFixLWuPkv3KT3TnV35m3");
+  const [link, setLink] = useState(DEFAULT_PLAYLIST);
   const [playlists, setPlaylists] = useState([]);
 
   useEffect(() => {
@@ -17,7 +20,12 @@ export function SpotifyPlayer() {
       spotifyApi.setAccessToken(user.accessToken);
       return spotifyApi;
     });
+    axios
+      .get(endpoint("spotify") + user.id)
+      .then((res) => setLink(res.data.playerWidgetSongLink || DEFAULT_PLAYLIST))
+      .catch(console.log);
   }, [user]);
+
   useEffect(() => {
     spotifyApi.getUserPlaylists().then((value) =>
       setPlaylists(
@@ -28,6 +36,13 @@ export function SpotifyPlayer() {
       )
     );
   }, [spotifyApi]);
+
+  useEffect(() => {
+    if (link == DEFAULT_PLAYLIST) return;
+    axios
+      .put(endpoint("spotify") + user.id, { playerWidgetSongLink: link })
+      .catch(console.log);
+  }, [link]);
 
   return (
     <WidgetCard rowSpan={2} colSpan={1} name="player">
