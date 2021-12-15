@@ -1,12 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-
+import { Request } from 'express';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get("about.json")
-  getAbout(): string {
-    return this.appService.getAbout();
+  @Get('about.json')
+  getAbout(@Req() req: Request) {
+    return this.appService.getAbout(req);
   }
 }
